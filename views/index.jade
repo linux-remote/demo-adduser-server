@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1 Linux Useradd
+  
+  div
+    label username: 
+    input(name="username")
+  div
+    label passwd: 
+    input(name="passwd")
+  button OK
+  h1 #{list.length}/#{maxUser}
+  if list.length >= maxUser
+    h1 
+  else
+    each v in list 
+      p Welcome to #{v}
+  script
+    window.$.ajax({
+      url: '/',
+      type: 'post',
+      data: {
+        username: 
+      }
+    })

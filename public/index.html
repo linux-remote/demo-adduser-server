@@ -1,0 +1,60 @@
+
+<!DOCTYPE html><html><head><title></title><link rel="stylesheet" href="/stylesheets/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script></head>
+
+<body>
+  <h1>Linux Useradd</h1>
+  <table>
+    <tr>
+      <td>
+          username:
+      </td>
+      <td>
+          <input id="username" name="username">
+      </td>
+    </tr>
+    <tr>
+        <td>
+            password:
+        </td>
+        <td>
+            <input id="password" name="password" value="123">
+        </td>
+      </tr>
+  </table>
+  <button id="submit">Submit</button>
+<script>
+  $( document ).ready(function() {
+      const $submit = $('#submit');
+      const $username = $('#username');
+      const $password = $('#password');
+      $username.val('hello' + Date.now());
+      $submit.click(function(){
+        const reg = /^([0-9]|[a-z]|[A-Z]|_)+$/;
+        const username = $username.val();
+        const password = $password.val();
+        if(!reg.test(username)){
+          return alert('Username Can only contain ([0-9]|[a-z]|[A-Z]|_)');
+        }
+        if(!reg.test(password)){
+          return alert('Password Can only contain ([0-9]|[a-z]|[A-Z]|_)');
+        }
+        window.$.ajax({
+          url: '/',
+          type: 'post',
+          data: {
+            username: username,
+            password: password
+          },
+          success(data){
+            if(data.code){
+              return alert(data.msg);
+            }
+            console.log('成功');
+          }
+        })
+      });
+  });
+
+  </script>
+</body>
+</html>
