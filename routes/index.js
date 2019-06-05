@@ -4,20 +4,24 @@ const path = require('path');
 const fs = require('fs');
 const maxUser = 100;
 const {exec} = require('child_process');
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   fs.readdir('/home', (err, files) => {
-//     if(err){
-//       return next(err);
-//     }
-//     if(files.length >= maxUser){
 
-//     }
-//     res.sendFile(path.join(__dirname, '../public/index.html'));
-//   })
-  
-// });
 const reg = /^([0-9]|[a-z]|[A-Z]|_)+$/;
+const users = fs.readdirSync('/home');
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  fs.readdir('/home', (err, files) => {
+    if(err){
+      return next(err);
+    }
+    if(files.length >= maxUser){
+
+    }
+    res.render('index');
+  })
+  
+});
+
 router.post('/', function(req, res, next) {
   const {username, password} = req.body;
   if(!reg.test(username)){
