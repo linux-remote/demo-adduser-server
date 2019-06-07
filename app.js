@@ -19,7 +19,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/', index); 
+app.use('/api', index); 
 
 app.use(express.static(path.join(__dirname, 'public')));
 

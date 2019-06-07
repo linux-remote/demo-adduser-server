@@ -1,60 +1,167 @@
+<!DOCTYPE html>
+<html>
 
-<!DOCTYPE html><html><head><title></title><link rel="stylesheet" href="/stylesheets/style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script></head>
+<head>
+  <title>Useradd</title>
+<style>
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+.right-users{
+  width: 300px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.app{
+  visibility: hidden;
+}
+hr{
+  visibility: hidden;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+</head>
 
 <body>
-  <h1>Linux Useradd</h1>
-  <table>
-    <tr>
-      <td>
-          username:
-      </td>
-      <td>
-          <input id="username" name="username">
-      </td>
-    </tr>
-    <tr>
-        <td>
-            password:
-        </td>
-        <td>
-            <input id="password" name="password" value="123">
-        </td>
-      </tr>
-  </table>
-  <button id="submit">Submit</button>
-<script>
-  $( document ).ready(function() {
-      const $submit = $('#submit');
-      const $username = $('#username');
-      const $password = $('#password');
+  <div id="app" class="app">
+      <div style="padding-right: 300px;">
+        <h1>Linux Useradd:</h1>
+        <div>Only use for demo of <a href="https://demo.linux-remote.org">linux-remote</a>. Users will be purged from time to time.</div>
+        <hr>
+        <div v-if="isSuccess">
+          <h1 style="color:green">Success!</h1>
+          <a href="https://demo.linux-remote.org">Go to login page.</a>
+          <p>
+            You need login in <span style="color:red">10 minutes</span>
+          </p>
+        </div>
+        <table v-else-if="!isErr">
+          <tr>
+            <td>
+              <label>username: </label>
+            </td>
+            <td>
+              <input id="username" name="username" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>password: </label>
+            </td>
+            <td>
+              <input id="password" name="password" type="password" value="123" />
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td style="text-align: right;">
+              <button id="submit">Register</button>
+            </td>
+          </tr>
+        </table>
+        <hr>
+        <div>
+          <span style="color: #BDB76B">Warning: </span>
+ If you log in, your IP will be seen by others when they use the <code>w</code>  command.
+        </div>
+        <div  v-else>
+          <h1 style="color: red">{{errMsg}}</h1>
+          <h2 v-if="isFull">
+              Please come back later.
+          </h2>
+        </div>
+        <p id="error" style="color: red;"></p>
+      </div>
+      <div class="right-users">
+        <h2>Registered: 
+          <span>{{users.length}}</span> / {{MAX_USERS}}
+        </h2>
+        <ul v-for="user in users" :key="user">
+          <li>{{user}}</li>
+        </ul>
+      </div>
+  </div>
+  <script>
+$( document ).ready(function() {
+  new window.Vue({
+    el: '#app',
+    data: {
+      users: [],
+      MAX_USERS: 0,
+      isFull: false,
+      isErr: false,
+      isSuccess: false,
+      errMsg: ''
+    },
+    methods: {
+      getData: function(){
+        const self = this;
+        window.$.ajax({
+          url: '/api',
+          type: 'get',
+          success: function(data){
+            Object.assign(self, data);
+          }
+        })
+      }
+    },
+    created: function(){
+      this.getData();
+    },
+    mounted: function(){
+      console.log('mounted')
+      var self = this;
+      this.$el.style.visibility="visible";
+
+      var $submit = $('#submit');
+      var $username = $('#username');
+      var $password = $('#password');
+      var $users = $('#users');
+      var $len = $('#length');
+      var error = $('#error');
       $username.val('hello' + Date.now());
       $submit.click(function(){
-        const reg = /^([0-9]|[a-z]|[A-Z]|_)+$/;
-        const username = $username.val();
-        const password = $password.val();
+        error.text('');
+        var reg = /^([0-9]|[a-z]|[A-Z]|_)+$/;
+        var username = $username.val();
+        var password = $password.val();
         if(!reg.test(username)){
           return alert('Username Can only contain ([0-9]|[a-z]|[A-Z]|_)');
         }
         if(!reg.test(password)){
           return alert('Password Can only contain ([0-9]|[a-z]|[A-Z]|_)');
         }
+        
         window.$.ajax({
-          url: '/',
+          url: '/api',
           type: 'post',
           data: {
             username: username,
             password: password
           },
-          success(data){
+          success: function(data){
             if(data.code){
-              return alert(data.msg);
+              error.text(data.msg);
+            } else {
+              self.isSuccess = true;
+              self.users.push(username);
             }
-            console.log('成功');
           }
         })
       });
-  });
+    }
+  })
 
+});
+  
   </script>
 </body>
+
 </html>
