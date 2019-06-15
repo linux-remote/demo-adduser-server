@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const wParse = require('./w-parse');
 const fs = require('fs');
-const MAX_USERS = 4;
+const MAX_USERS = 30;
 const BEFORE_LOGIN_KEEP_TIME = 1000 * 60 * 10;
 const sas = require('sas');
 const {exec} = require('child_process');
@@ -96,7 +96,6 @@ router.post('/', function(req, res, next) {
 let isStartAutoClear = false;
 let callbacks_bak = [];
 function autoClear(callback){
-  console.log('autoClear');
   if(callback){
     callbacks_bak.push(callback);
   }
@@ -149,11 +148,10 @@ function autoClear(callback){
         }
       });
       const sasTasks = [];
-      console.log('killList', killList)
       killList.forEach(_name => {
         
         let name = _name;
-        console.log('name' , name);
+        // console.log('name' , name);
         sasTasks.push([
           cb => exec(`killall -u '${name}'`, {env: process.env}, (err)=> {
             if(err && err.code !== 1){

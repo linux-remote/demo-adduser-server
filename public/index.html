@@ -33,14 +33,16 @@ hr{
   <div id="app" class="app">
       <div style="padding-right: 300px;">
         <h1>Linux Useradd:</h1>
-        <div>Only use for demo of <a href="https://demo.linux-remote.org">https://demo.linux-remote.org</a>. Users will be purged from time to time.</div>
+        <div>Only use for demo of <a href="http://149.129.62.26:3001">http://149.129.62.26:3001</a>. Users will be purged from time to time.</div>
+        <p>This server is very tiny(1 core, 1G Mem), May collapse at any time.</p>
         <hr>
         <div v-if="isSuccess">
           <h1 style="color:green">Success!</h1>
-          <a href="https://demo.linux-remote.org">Go to login page.</a>
           <p>
             You need login in <span style="color:red">10 minutes</span>
           </p>
+          <a href="http://149.129.62.26:3001">Go to login page.</a>
+
         </div>
         <table v-else-if="!isErr">
           <tr>
@@ -68,7 +70,7 @@ hr{
         </table>
         <hr>
         <div>
-          <span style="color: #BDB76B">Warning: </span>
+          <span style="color: #B8860B">Warning: </span>
  If you log in, your IP will be seen by others when they use the <code>w</code>  command.
         </div>
         <div  v-else>
