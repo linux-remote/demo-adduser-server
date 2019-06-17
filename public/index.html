@@ -24,6 +24,9 @@ a {
 hr{
   visibility: hidden;
 }
+table{
+  outline: none;
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
@@ -45,7 +48,10 @@ hr{
           <a href="http://149.129.62.26:3001">Go to login page.</a>
 
         </div>
-        <table v-else-if="!isErr">
+        <form v-else-if="!isErr" @submit.prevent="register">
+
+        
+        <table>
           <tr>
             <td>
               <label>username: </label>
@@ -65,10 +71,11 @@ hr{
           <tr>
             <td></td>
             <td style="text-align: right;">
-              <button id="submit">Register</button>
+              <button type="submit">Register</button>
             </td>
           </tr>
         </table>
+        </form>
         <hr>
         <div>
           <span style="color: #B8860B">Warning: </span>
@@ -113,26 +120,19 @@ $( document ).ready(function() {
             Object.assign(self, data);
           }
         })
-      }
-    },
-    created: function(){
-      this.getData();
-    },
-    mounted: function(){
-      var self = this;
-      this.$el.style.visibility="visible";
+      },
+      register: function(){
+        var self = this;
 
-      var $submit = $('#submit');
-      var $username = $('#username');
-      var $password = $('#password');
-      var $users = $('#users');
-      var $len = $('#length');
-      var error = $('#error');
-      $submit.click(function(){
+        var $username = $('#username');
+        var $password = $('#password');
+        var error = $('#error');
+
         error.text('');
         var reg = /^([0-9]|[a-z]|[A-Z]|_)+$/;
         var username = $username.val();
         var password = $password.val();
+
         if(!reg.test(username)){
           return alert('Username Can only contain ([0-9]|[a-z]|[A-Z]|_)');
         }
@@ -156,7 +156,13 @@ $( document ).ready(function() {
             }
           }
         })
-      });
+      }
+    },
+    created: function(){
+      this.getData();
+    },
+    mounted: function(){
+      this.$el.style.visibility="visible";
     }
   })
 
