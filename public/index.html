@@ -154,6 +154,9 @@ $( document ).ready(function() {
               self.isSuccess = true;
               self.users.push(username);
             }
+          },
+          error: function(xhr){
+            alert('http ' + xhr.status + ': ' + xhr.responseText);
           }
         })
       }

@@ -10,12 +10,6 @@
     "email": "hezedu@hotmail.com"
   },
   "dependencies": {
-    "body-parser": "~1.18.2",
-    "cookie-parser": "^1.4.5",
-    "debug": "~2.6.9",
-    "express": "^4.17.1",
-    "morgan": "~1.9.0",
-    "sas": "^3.0.4",
-    "serve-favicon": "~2.4.5"
+    "sas": "^3.0.4"
   }
 }

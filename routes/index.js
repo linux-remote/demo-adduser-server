@@ -1,98 +1,90 @@
-var express = require('express');
-var router = express.Router();
 const wParse = require('./w-parse');
 const fs = require('fs');
 const MAX_USERS = 30;
 const BEFORE_LOGIN_KEEP_TIME = 1000 * 60 * 10;
 const sas = require('sas');
 const {exec} = require('child_process');
-
 const reg = /^([0-9]|[a-z]|[A-Z]|_)+$/;
 let users = fs.readdirSync('/home');
 const registTime = Object.create(null);
 
-router.get('/', function(req, res, next) {
+function getUserList(callback){
   autoClear((err) => {
-    // if(err){
-    //   return next(err);
-    // }
-
-    res.json({
+ 
+    callback(null, {
       users, 
       MAX_USERS, 
       isFull: err && err.name === 'fullError',
       isErr: Boolean(err),
       errMsg: err && err.message
     });
-  })
-  
-});
+  });
+}
 
-router.post('/', function(req, res, next) {
+function createUser(data, callback){
   autoClear(err => {
     if(err){
-      return res.send({
+      callback({
         code: 1,
         msg: err.message
+      });
+      return;
+    }
+
+    const {username, password} = data;
+    if(!reg.test(username)){
+      return callback({
+        code: 1,
+        msg: 'Username Can only contain ([0-9]|[a-z]|[A-Z]|_) '
       })
     }
-    next();
-  });
-},function(req, res, next) {
-
-  const {username, password} = req.body;
-  if(!reg.test(username)){
-    return res.send({
-      code: 1,
-      msg: 'Username Can only contain ([0-9]|[a-z]|[A-Z]|_) '
-    })
-  }
-  if(!reg.test(password)){
-    return res.send({
-      code: 1,
-      msg: 'Password Can only contain ([0-9]|[a-z]|[A-Z]|_) '
-    })
-  }
-  if(users.indexOf(username) !== -1){
-    return res.send({
-      code: 1,
-      msg: 'User already exists'
-    })
-  }
-  // useradd -p 不起作用. ubuntu and centos.
-  exec(`useradd -m '${username}'`, function(err){
-    if(err){
-      return next(err);
-    } 
-    // console.log('useradd OK');
-    const l = exec(`passwd '${username}'`, (err, stdout, stderr) => {
-      // console.log('passwd end', stdout);
+    if(!reg.test(password)){
+      return callback({
+        code: 1,
+        msg: 'Password Can only contain ([0-9]|[a-z]|[A-Z]|_) '
+      })
+    }
+    if(users.indexOf(username) !== -1){
+      return callback({
+        code: 1,
+        msg: 'User already exists'
+      })
+    }
+    // useradd -p 不起作用. ubuntu and centos.
+    exec(`useradd -m '${username}'`, function(err){
       if(err){
-        return next(err);
-      }
-      users.push(username);
-      registTime[username] = Date.now();
-      res.end('ok');
-      // autoClear((autoClearErr) => {
-      //   if(autoClearErr){
-      //     console.error(autoClearErr);
-      //   }
-      // });
-    });
-    l.on('data', function(data){
-      // console.log('on data', data);
-    })
-    setTimeout(() => {
-      // console.log('passwd write 1');
-      l.stdin.write(`${password}\n`);
+        return callback(err);
+      } 
+      // console.log('useradd OK');
+      const l = exec(`passwd '${username}'`, (err, stdout, stderr) => {
+        // console.log('passwd end', stdout);
+        if(err){
+          return callback(err);
+        }
+        users.push(username);
+        registTime[username] = Date.now();
+        callback(null, 'ok');
+      });
+      l.on('data', function(data){
+        // console.log('on data', data);
+      })
       setTimeout(() => {
-        // console.log('passwd write 2');
+        // console.log('passwd write 1');
         l.stdin.write(`${password}\n`);
+        setTimeout(() => {
+          // console.log('passwd write 2');
+          l.stdin.write(`${password}\n`);
+        }, 200);
       }, 200);
-    }, 200);
-    
-  })
-});
+      
+    })
+
+
+  });
+}
+
+
+
 let isStartAutoClear = false;
 let callbacks_bak = [];
 function autoClear(callback){
@@ -132,6 +124,9 @@ function autoClear(callback){
       }
       if(keepMap.has('root')){
         keepMap.delete('root');
+      }
+      if(keepMap.has('dw')){
+        keepMap.delete('dw');
       }
       if(keepMap.size >= MAX_USERS){
         return done({
@@ -185,4 +180,7 @@ function autoClear(callback){
 // userdel -r linux-remote
 }
 
-module.exports = router;
+module.exports = {
+  getUserList,
+  createUser
+};
