@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=development nodemon -e js -L bin/www"
+    "startByPM2": "NODE_ENV=production pm2 --name='adduser' start index.js",
+    "dev": "NODE_ENV=development nodemon -e js -L bin/www"
   },
   "author": {
     "name": "Du Wei",
