@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "startByPM2": "NODE_ENV=production pm2 --name='adduser' start index.js",
+    "pro": "NODE_ENV=production node index.js &",
     "dev": "NODE_ENV=development nodemon -e js -L bin/www"
   },
   "author": {
