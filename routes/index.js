@@ -44,7 +44,7 @@ function createUser(data, callback){
         msg: 'Password Can only contain ([0-9]|[a-z]|[A-Z]|_) '
       })
     }
-    if(users.indexOf(username) !== -1){
+    if(users.indexOf(username) !== -1 || username === 'root'){
       return callback({
         code: 1,
         msg: 'User already exists'
@@ -125,9 +125,7 @@ function autoClear(callback){
       if(keepMap.has('root')){
         keepMap.delete('root');
       }
-      if(keepMap.has('dw')){
-        keepMap.delete('dw');
-      }
+
       if(keepMap.size >= MAX_USERS){
         return done({
           name: 'fullError',
@@ -138,6 +136,9 @@ function autoClear(callback){
       let killList = [];
       
       users.forEach(k => {
+        if(k === 'dw'){
+          return;
+        }
         if(!keepMap.has(k)){
           killList.push(k);
         }
