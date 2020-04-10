@@ -99,12 +99,13 @@ const app = function(req, res){
 };
 let server;
 if(process.env.NODE_ENV === 'production' && secure){
-  const cert = fs.readFileSync(secure.certPath, 'utf-8');
-  const key = fs.readFileSync(secure.keyPath, 'utf-8');
-  server = https.createServer(app, {
-    cert,
-    key
-  });
+  
+  const key = fs.readFileSync(secure.keyPath);
+  const cert = fs.readFileSync(secure.certPath);
+  server = https.createServer({
+    key,
+    cert
+  }, app);
 } else {
   server = http.createServer(app);
 }
