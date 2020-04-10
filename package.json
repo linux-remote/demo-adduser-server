@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "pro": "NODE_ENV=production node index.js &",
-    "dev": "NODE_ENV=development nodemon -e js -L bin/www"
+    "pro": "NODE_ENV=production node /opt/demo-adduser-server/index.js &"
   },
   "author": {
     "name": "Du Wei",
