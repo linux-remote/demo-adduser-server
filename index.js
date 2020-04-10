@@ -98,7 +98,7 @@ const app = function(req, res){
   }
 };
 let server;
-if(secure){
+if(process.env.NODE_ENV === 'production' && secure){
   const cert = fs.readFileSync(secure.certPath, 'utf-8');
   const key = fs.readFileSync(secure.keyPath, 'utf-8');
   server = https.createServer(app, {
@@ -107,11 +107,13 @@ if(secure){
   });
 } else {
   server = http.createServer(app);
-} 
+}
+
 server.listen(port);
 
 server.on('listening', function(){
-  console.log('server listening on ' + port);
+  console.log('server listening on ' + port, 'pid: ' + process.pid);
+  console.log('NODE_ENV', process.env.NODE_ENV)
 });
 
 // ------------------------- npm module etag -------------------------
