@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -11,7 +12,7 @@ if(os.userInfo().uid !== 0){
 }
 
 const {getUserList, createUser} = require('./routes/index.js');
-const {port} = require('./config.js');
+const {port, secure} = require('./config.js');
 
 let indexPath = path.join(__dirname, 'public/index.html');
 const indexHtmlCache = fs.readFileSync(indexPath);
@@ -26,7 +27,7 @@ let faviconEtag = fs.statSync(faviconPath);
 faviconEtag = stattag(faviconEtag);
 faviconPath = null;
 
-const server = http.createServer(function(req, res){
+const app = function(req, res){
   if(req.url === '/' || req.url === '/index.html'){
     if(req.headers['If-None-Match'] === indexEtag){
       res.statusCode = 304;
@@ -95,8 +96,18 @@ const server = http.createServer(function(req, res){
     res.statusCode = 404;
     res.end('Not Found');
   }
-});
-
+};
+let server;
+if(secure){
+  const cert = fs.readFileSync(secure.certPath, 'utf-8');
+  const key = fs.readFileSync(secure.keyPath, 'utf-8');
+  server = https.createServer(app, {
+    cert,
+    key
+  });
+} else {
+  server = http.createServer(app);
+} 
 server.listen(port);
 
 server.on('listening', function(){
