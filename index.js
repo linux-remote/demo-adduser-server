@@ -3,8 +3,10 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-
+const {execSync} = require('child_process');
 const qs = require('querystring');
+
+execSync('killall -v'); // check is has 'killall' command.
 
 global.IS_PRO = process.env.NODE_ENV === 'production';
 global.CONF = global.IS_PRO ? 
