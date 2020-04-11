@@ -1,6 +1,6 @@
 const wParse = require('./w-parse');
 const fs = require('fs');
-const MAX_USERS = 30;
+const {MAX_USERS} = global.CONF;
 const BEFORE_LOGIN_KEEP_TIME = 1000 * 60 * 10;
 const sas = require('sas');
 const {exec} = require('child_process');

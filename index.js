@@ -6,13 +6,20 @@ const os = require('os');
 
 const qs = require('querystring');
 
+global.IS_PRO = process.env.NODE_ENV === 'production';
+global.CONF = global.IS_PRO ? 
+  require('./config.js') : 
+  require('./dev-config.js');
+
+  const {port, secure} = global.CONF;
+
 if(os.userInfo().uid !== 0){
   console.error('must start as root');
   process.exit();
 }
 
 const {getUserList, createUser} = require('./routes/index.js');
-const {port, secure} = require('./config.js');
+
 
 let indexPath = path.join(__dirname, 'public/index.html');
 const indexHtmlCache = fs.readFileSync(indexPath);
@@ -98,7 +105,7 @@ const app = function(req, res){
   }
 };
 let server;
-if(process.env.NODE_ENV === 'production' && secure){
+if(secure){
   
   const key = fs.readFileSync(secure.keyPath);
   const cert = fs.readFileSync(secure.certPath);
@@ -118,7 +125,8 @@ server.on('listening', function(){
 });
 
 // ------------------------- npm module etag -------------------------
-// copyright https://github.com/jshttp/etag
+// copyright https://github.com/jshttp/etag/
+// MIT License
 // modifed: mtime is geted. add W/
 /**
  * Generate a tag for a stat.
