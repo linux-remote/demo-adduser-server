@@ -9,15 +9,12 @@ let users = fs.readdirSync('/home');
 const registTime = Object.create(null);
 
 function getUserList(callback){
-  autoClear((err) => {
- 
-    callback(null, {
-      users, 
-      MAX_USERS, 
-      isFull: err && err.name === 'fullError',
-      isErr: Boolean(err),
-      errMsg: err && err.message
-    });
+  callback(null, {
+    users, 
+    MAX_USERS, 
+    isFull: err && err.name === 'fullError',
+    isErr: Boolean(err),
+    errMsg: err && err.message
   });
 }
 
