@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "pro": "NODE_ENV=production node /opt/demo-adduser-server/index.js &"
+    "pro": "NODE_ENV=production node /opt/demo-adduser-server/index.js &",
+    "showPid": "ps axo pid,cmd U root | grep /opt/demo-adduser-server/index.js$"
   },
   "author": {
     "name": "Du Wei",
