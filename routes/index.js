@@ -13,8 +13,8 @@ function getUserList(callback){
     users, 
     MAX_USERS, 
     isFull: users.length >= MAX_USERS,
-    isErr: Boolean(err),
-    errMsg: err && err.message
+    isErr: false,
+    errMsg: null
   });
 }
 
