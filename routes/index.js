@@ -12,7 +12,7 @@ function getUserList(callback){
   callback(null, {
     users, 
     MAX_USERS, 
-    isFull: err && err.name === 'fullError',
+    isFull: users.length >= MAX_USERS,
     isErr: Boolean(err),
     errMsg: err && err.message
   });
