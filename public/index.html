@@ -71,7 +71,7 @@ table{
           <tr>
             <td></td>
             <td style="text-align: right;">
-              <button type="submit">Register</button>
+              <button v-else type="submit" :disabled="isRequest">Register{{isRequest ? 'ing...' : ''}}</button>
             </td>
           </tr>
         </table>
@@ -108,6 +108,7 @@ $( document ).ready(function() {
       isFull: false,
       isErr: false,
       isSuccess: false,
+      isRequest: false,
       errMsg: ''
     },
     methods: {
@@ -139,7 +140,10 @@ $( document ).ready(function() {
         if(!reg.test(password)){
           return alert('Password Can only contain ([0-9]|[a-z]|[A-Z]|_)');
         }
-        
+        if(self.isRequest){
+          return;
+        }
+        self.isRequest = true;
         window.$.ajax({
           url: '/api',
           type: 'post',
@@ -157,6 +161,9 @@ $( document ).ready(function() {
           },
           error: function(xhr){
             alert('http ' + xhr.status + ': ' + xhr.responseText);
+          },
+          complete: function(){
+            self.isRequest = true;
           }
         })
       }
