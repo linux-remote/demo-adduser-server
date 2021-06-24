@@ -163,7 +163,7 @@ $( document ).ready(function() {
             alert('http ' + xhr.status + ': ' + xhr.responseText);
           },
           complete: function(){
-            self.isRequest = true;
+            self.isRequest = false;
           }
         })
       }
