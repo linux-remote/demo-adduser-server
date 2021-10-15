@@ -158,6 +158,7 @@ function autoClear(callback){
             }
             cb();
           }),
+          cb => exec(`rm -rf /home/${name}`, {env: process.env}, cb),
           cb => {
             const i = users.indexOf(name);
             delete(registTime[name]);

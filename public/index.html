@@ -156,6 +156,12 @@ $( document ).ready(function() {
               error.text(data.msg);
             } else {
               self.isSuccess = true;
+              // console.log('self.users.length', self.users.length, 'self.MAX_USERS', self.MAX_USERS);
+              if(self.users.length >= self.MAX_USERS){
+                self.getData();
+                
+                return;
+              }
               self.users.push(username);
             }
           },
