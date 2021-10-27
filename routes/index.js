@@ -1,7 +1,7 @@
 const wParse = require('./w-parse');
 const fs = require('fs');
-const {MAX_USERS} = global.CONF;
-const BEFORE_LOGIN_KEEP_TIME = 1000 * 60 * 10;
+const {MAX_USERS, BEFORE_LOGIN_KEEP_TIME} = global.CONF;
+
 const sas = require('sas');
 const {exec} = require('child_process');
 const reg = /^([0-9]|[a-z]|[A-Z]|_)+$/;
@@ -145,7 +145,8 @@ function autoClear(callback){
         
         let name = _name;
         // console.log('name' , name);
-        sasTasks.push([
+        sasTasks.push(cbAll => {
+          sas([
           cb => exec(`killall -u '${name}'`, {env: process.env}, (err)=> {
             if(err && err.code !== 1){
               return cb(err);
@@ -167,7 +168,10 @@ function autoClear(callback){
             }
             cb();
           }
-        ])
+          ], () => {
+            cbAll();
+          })
+        })
       });
       sas(sasTasks, done);
     })

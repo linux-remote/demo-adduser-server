@@ -4,5 +4,6 @@ module.exports = {
     keyPath: '/etc/letsencrypt/live/demo.linux-remote.org/privkey.pem',
     certPath: '/etc/letsencrypt/live/demo.linux-remote.org/fullchain.pem'
   },
-  MAX_USERS: 30
+  MAX_USERS: 30,
+  BEFORE_LOGIN_KEEP_TIME: 1000 * 60 * 10
 }
