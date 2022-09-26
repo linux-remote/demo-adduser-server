@@ -19,14 +19,14 @@ function getUserList(callback){
 }
 
 function createUser(data, callback){
-  autoClear(err => {
-    if(err){
-      callback({
-        code: 1,
-        msg: err.message
-      });
-      return;
-    }
+  // autoClear(err => {
+  //   if(err){
+  //     callback({
+  //       code: 1,
+  //       msg: err.message
+  //     });
+  //     return;
+  //   }
 
     const {username, password} = data;
     if(!reg.test(username)){
@@ -61,6 +61,7 @@ function createUser(data, callback){
         users.push(username);
         registTime[username] = Date.now();
         callback(null, 'ok');
+        autoClear();
       });
       l.on('data', function(data){
         // console.log('on data', data);
@@ -77,7 +78,7 @@ function createUser(data, callback){
     })
 
 
-  });
+  // });
 }
 
 
