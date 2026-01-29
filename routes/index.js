@@ -134,7 +134,7 @@ function autoClear(callback){
       let killList = [];
       
       users.forEach(k => {
-        if(k === 'dw'){
+        if(k === 'ubuntu'){
           return;
         }
         if(!keepMap.has(k)){
