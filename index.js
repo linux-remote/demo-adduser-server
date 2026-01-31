@@ -29,6 +29,11 @@ let indexEtag = fs.statSync(indexPath);
 indexEtag = stattag(indexEtag);
 indexPath = null;
 
+let jsPath = path.join(__dirname, 'public/vue_full.min.js');
+const jsCache = fs.readFileSync(jsPath);
+let jsEtag = fs.statSync(jsPath);
+jsEtag = stattag(jsEtag);
+jsPath = null;
 
 let faviconPath = path.join(__dirname, 'LINUX-LOGO-32.png');
 const faviconCache = fs.readFileSync(faviconPath);
@@ -47,7 +52,16 @@ const app = function(req, res){
     res.setHeader('Content-Length', indexHtmlCache.length);
     res.setHeader('Cache-Control', 'max-age=300');
     res.end(indexHtmlCache);
-
+  } else if(req.url === '/vue_full.min.js'){
+    if(req.headers['If-None-Match'] === jsEtag){
+      res.statusCode = 304;
+      res.end();
+      return;
+    }
+    res.setHeader('Content-Type', 'application/javascript');
+    res.setHeader('Content-Length', jsCache.length);
+    res.setHeader('Cache-Control', 'max-age=31536000');
+    res.end(jsCache);
   } else if(req.url === '/favicon.ico'){
     if(req.headers['If-None-Match'] === faviconEtag){
       res.statusCode = 304;
