@@ -28,7 +28,7 @@ table{
   outline: none;
 }
 </style>
-<script src="/local-unpkg/jquery@3.5.0/dist/jquery.min.js"></script>
+<script src="http://152.32.206.156:3001/local-unpkg/jquery@3.5.0/dist/jquery.min.js"></script>
   <script src="/vue_full.min.js"></script>
 </head>
 
@@ -36,7 +36,7 @@ table{
   <div id="app" class="app">
       <div style="padding-right: 300px;">
         <h1>Linux Useradd:</h1>
-        <div>Only use for demo of <a href="{{DEMO_URL}}">{{DEMO_URL}}</a>.</div>
+        <div>Only use for demo of <a href="http://152.32.206.156:3001/">http://152.32.206.156:3001/</a>.</div>
         <p>It adds Linux native users, not fake ones. The number of users is limited to {{MAX_USERS}} and users will be cleared from time to time.</p>
         <p>This server is very cheap(1 core, 1G Mem), May collapse at any time.</p>
         <hr>
@@ -45,7 +45,7 @@ table{
           <p>
             You need login in <span style="color:red">10 minutes</span>
           </p>
-          <a href="{{DEMO_URL}}">Go to login page.</a>
+          <a href="http://152.32.206.156:3001/">Go to login page.</a>
 
         </div>
         <form v-else-if="!isErr" @submit.prevent="register">
@@ -100,8 +100,6 @@ table{
   </div>
   <script>
 $( document ).ready(function() {
-  const DEMO_PORT = 3001;
-  const DEMO_URL = location.origin.substring(0, location.origin.lastIndexOf(':') + 1) + DEMO_PORT + '/';
   new window.Vue({
     el: '#app',
     data: {
@@ -111,8 +109,7 @@ $( document ).ready(function() {
       isErr: false,
       isSuccess: false,
       isRequest: false,
-      errMsg: '',
-      DEMO_URL: DEMO_URL
+      errMsg: ''
     },
     methods: {
       getData: function(){
